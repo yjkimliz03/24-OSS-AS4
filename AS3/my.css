@@ -50,7 +50,7 @@ p {
     }
     .btn {
         display: block;
-        width: 100%;
+        width: 50%;
         margin-bottom: 10px;
     }
 }
@@ -65,7 +65,7 @@ p {
         font-size: 16px;
     }
     .btn {
-        width: auto;
+        width: 20%;
         margin-right: 5px;
     }
 }
