@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD AJAX with XMLHttpRequest</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<h1>AJAX CRUD 페이지 구현 (22200150 김유진)</h1>
+<button onclick="getData()">데이터 조회</button>
+<br><br>
+
+<div>
+    <label>ID: <input type="text" id="ID" /></label>
+    <label>이름: <input type="text" id="name" /></label>
+    <label>Email: <input type="email" id="email" /></label>
+    <label>Phone: <input type="text" id="phone" /></label>
+    <button onclick="createData()">데이터 추가</button>
+</div>
+<br>
+
+<div>
+    <label>수정할 ID: <input type="text" id="updateId" /></label>
+    <label>이름: <input type="text" id="updateName" /></label>
+    <label>Email: <input type="email" id="updateEmail" /></label>
+    <label>Phone: <input type="text" id="updatePhone" /></label>
+    <button onclick="updateData()">데이터 수정</button>
+</div>
+<br>
+
+<div>
+    <label>삭제할 ID: <input type="text" id="deleteId" /></label>
+    <button onclick="deleteData()">데이터 삭제</button>
+</div>
+
+<div id="dataList"></div>
+
+<script>
+    const baseURL = "http://localhost:3000/users";
+
+    // 데이터 조회 함수
+    function getData() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", baseURL, true);
+        xhr.setRequestHeader("content-type", "application/json");
+        xhr.onload = () => {
+            if (xhr.status === 200) {
+                const students = JSON.parse(xhr.responseText);
+                $("#dataList").html("");
+                students.forEach(item => {
+                    $("#dataList").append(`<div>ID: ${item.id} | 이름: ${item.name} | Email: ${item.email} | Phone: ${item.phone}</div>`);
+                });
+            }
+        };
+        xhr.send();
+    }
+
+    // 데이터 추가 함수
+    function createData() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", baseURL, true);
+        xhr.setRequestHeader("content-type", "application/json;charset=UTF-8");
+
+        const data = {
+            ID: $("#ID").val(),
+            name: $("#name").val(),
+            email: $("#email").val(),
+            phone: $("#phone").val()
+        };
+
+        xhr.onload = () => {
+            if (xhr.status === 201) {
+                alert("데이터가 추가되었습니다.");
+                getData();
+            }
+        };
+        xhr.send(JSON.stringify(data));
+    }
+
+    // 데이터 수정 함수
+    function updateData() {
+        const id = $("#updateId").val();
+        const xhr = new XMLHttpRequest();
+        xhr.open("PUT", `${baseURL}/${id}`, true);
+        xhr.setRequestHeader("content-type", "application/json;charset=UTF-8");
+
+        const data = {
+            name: $("#updateName").val(),
+            email: $("#updateEmail").val(),
+            phone: $("#updatePhone").val()
+        };
+
+        xhr.onload = () => {
+            if (xhr.status === 200) {
+                alert("데이터가 수정되었습니다.");
+                getData();
+            }
+        };
+        xhr.send(JSON.stringify(data));
+    }
+
+    // 데이터 삭제 함수
+    function deleteData() {
+        const id = $("#deleteId").val();
+        const xhr = new XMLHttpRequest();
+        xhr.open("DELETE", `${baseURL}/${id}`, true);
+        
+        xhr.onload = () => {
+            if (xhr.status === 200) {
+                alert("데이터가 삭제되었습니다.");
+                getData();
+            }
+        };
+        xhr.send();
+    }
+</script>
+
+</body>
+</html>
